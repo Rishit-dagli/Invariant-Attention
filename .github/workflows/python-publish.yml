@@ -29,7 +29,7 @@ jobs:
         pip install build tensorflow einops pytest
     - name: Run Tests
       run: |
-        pytest isab --verbose
+        pytest invariant_attention --verbose
     - name: Build package
       run: python -m build
     - name: Publish package
