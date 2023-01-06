@@ -108,4 +108,8 @@ class InvariantPointAttention(tf.keras.layers.Layer):
             mask = tf.cast(mask, dtype = tf.bool)
             mask_value = -tf.experimental.numpy.finfo(attn_logits.dtype).max
             attn_logits = tf.where(mask, mask_value, attn_logits)
+
+        attn = tf.nn.softmax(attn_logits, axis = -1)
+
+
         
