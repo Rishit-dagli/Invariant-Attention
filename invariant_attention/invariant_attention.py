@@ -30,3 +30,14 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         self.to_scalar_k = tf.keras.layers.Dense(scalar_key_dim * heads, use_bias = False)
         self.to_scalar_v = tf.keras.layers.Dense(scalar_value_dim * heads, use_bias = False)
 
+        point_weight_init_value = tf.math.log(tf.math.exp(tf.ones((heads,))) - 1.)
+        self.point_weights = tf.Variable(point_weight_init_value)
+
+        self.point_attn_logits_scale = ((num_attn_logits * point_key_dim) * (9 / 2)) ** -0.5
+
+        self.to_point_q = tf.keras.layers.Dense(point_key_dim * heads * 3, use_bias = False)
+        self.to_point_k = tf.keras.layers.Dense(point_key_dim * heads * 3, use_bias = False)
+        self.to_point_v = tf.keras.layers.Dense(point_value_dim * heads * 3, use_bias = False)
+
+        pairwise_repr_dim = default(pairwise_repr_dim, dim) if require_pairwise_repr else 0
+
