@@ -73,3 +73,6 @@ class InvariantPointAttention(tf.keras.layers.Layer):
 
         q_point, k_point, v_point = self.to_point_q(x), self.to_point_k(x), self.to_point_v(x)
 
+        q_scalar, k_scalar, v_scalar = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h = h), (q_scalar, k_scalar, v_scalar))
+        q_point, k_point, v_point = map(lambda t: rearrange(t, 'b n (h d c) -> (b h) n d c', h = h, c = 3), (q_point, k_point, v_point))
+
