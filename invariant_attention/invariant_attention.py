@@ -95,3 +95,6 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         point_weights = repeat(point_weights, 'h -> (b h) () ()', b = b)
 
         attn_logits_points = -0.5 * (point_dist * point_weights * self.point_attn_logits_scale)
+
+        attn_logits = attn_logits_scalar + attn_logits_points
+
