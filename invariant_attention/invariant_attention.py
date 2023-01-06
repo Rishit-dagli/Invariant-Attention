@@ -67,3 +67,9 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         mask = None
     ):
         x, b, h, eps, require_pairwise_repr = single_repr, single_repr.shape[0], self.heads, self.eps, self.require_pairwise_repr
+        assert not (require_pairwise_repr and pairwise_repr is None), 'pairwise representation cannot be empty if require_pairwise_repr is True'
+
+        q_scalar, k_scalar, v_scalar = self.to_scalar_q(x), self.to_scalar_k(x), self.to_scalar_v(x)
+
+        q_point, k_point, v_point = self.to_point_q(x), self.to_point_k(x), self.to_point_v(x)
+
