@@ -39,5 +39,21 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         self.to_point_k = tf.keras.layers.Dense(point_key_dim * heads * 3, use_bias = False)
         self.to_point_v = tf.keras.layers.Dense(point_value_dim * heads * 3, use_bias = False)
 
-        pairwise_repr_dim = default(pairwise_repr_dim, dim) if require_pairwise_repr else 0
+        if require_pairwise_repr:
+            if pairwise_repr_dim is not None:
+                pairwise_repr_dim = pairwise_repr_dim
+            else:
+                pairwise_repr_dim = dim
+        else:
+            pairwise_repr_dim = 0
 
+        if require_pairwise_repr:
+            self.pairwise_attn_logits_scale = num_attn_logits ** -0.5
+
+            self.to_pairwise_attn_bias = tf.keras.Sequential([
+                tf.keras.layers.Dense(heads),
+                Rearrange('b ... h -> (b h) ...')
+            ])
+        
+        self.to_out = tf.keras.layers.Dense(dim)
+    
