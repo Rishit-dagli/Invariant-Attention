@@ -57,3 +57,13 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         
         self.to_out = tf.keras.layers.Dense(dim)
     
+    def call(
+        self,
+        single_repr,
+        pairwise_repr = None,
+        *,
+        rotations,
+        translations,
+        mask = None
+    ):
+        x, b, h, eps, require_pairwise_repr = single_repr, single_repr.shape[0], self.heads, self.eps, self.require_pairwise_repr
