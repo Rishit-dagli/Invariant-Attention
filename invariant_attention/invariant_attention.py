@@ -83,3 +83,15 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         k_point = tf.einsum('b n d c, b n c r -> b n d r', k_point, rotations) + translations
         v_point = tf.einsum('b n d c, b n c r -> b n d r', v_point, rotations) + translations
 
+        attn_logits_scalar = tf.einsum('b i d, b j d -> b i j', q_scalar, k_scalar) * self.scalar_attn_logits_scale
+
+        if require_pairwise_repr:
+            attn_logits_pairwise = self.to_pairwise_attn_bias(pairwise_repr) * self.pairwise_attn_logits_scale
+        
+        point_qk_diff = rearrange(q_point, 'b i d c -> b i () d c') - rearrange(k_point, 'b j d c -> b () j d c')
+        point_dist = tf.reduce_sum((point_qk_diff ** 2), axis=(-1, -2))
+
+        point_weights = tf.math.softplus(self.point_weights)
+        point_weights = repeat(point_weights, 'h -> (b h) () ()', b = b)
+
+        attn_logits_points = -0.5 * (point_dist * point_weights * self.point_attn_logits_scale)
