@@ -125,4 +125,9 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         results_points = tf.einsum('b n d c, b n c r -> b n d r', results_points - translations, tf.transpose(rotations, perm=perm))
         results_points_norm = tf.math.sqrt(tf.reduce_sum(tf.math.square(results_points), axis = -1) + eps)
 
+        results_scalar = rearrange(results_scalar, '(b h) n d -> b n (h d)', h = h)
+        results_points = rearrange(results_points, '(b h) n d c -> b n (h d c)', h = h)
+        results_points_norm = rearrange(results_points_norm, '(b h) n d -> b n (h d)', h = h)
+
+        results = (results_scalar, results_points, results_points_norm)
 
