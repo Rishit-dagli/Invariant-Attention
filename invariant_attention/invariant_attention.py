@@ -111,5 +111,12 @@ class InvariantPointAttention(tf.keras.layers.Layer):
 
         attn = tf.nn.softmax(attn_logits, axis = -1)
 
+        results_scalar = tf.einsum('b i j, b j d -> b i d', attn, v_scalar)
+        attn_with_heads = rearrange(attn, '(b h) i j -> b h i j', h = h)
+
+        if require_pairwise_repr:
+            results_pairwise = tf.einsum('b h i j, b i j d -> b h i d', attn_with_heads, pairwise_repr)
+
+        results_points = tf.einsum('b i j, b j d c -> b i d c', attn, v_point)
 
         
