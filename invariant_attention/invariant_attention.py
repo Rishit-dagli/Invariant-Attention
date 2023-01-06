@@ -119,4 +119,10 @@ class InvariantPointAttention(tf.keras.layers.Layer):
 
         results_points = tf.einsum('b i j, b j d c -> b i d c', attn, v_point)
 
-        
+        rotation_rank = tf.rank(rotations)
+        perm = list(range(rotation_rank))
+        perm[-1], perm[-2] = perm[-2], perm[-1]
+        results_points = tf.einsum('b n d c, b n c r -> b n d r', results_points - translations, tf.transpose(rotations, perm=perm))
+        results_points_norm = tf.math.sqrt(tf.reduce_sum(tf.math.square(results_points), axis = -1) + eps)
+
+
