@@ -76,3 +76,10 @@ class InvariantPointAttention(tf.keras.layers.Layer):
         q_scalar, k_scalar, v_scalar = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h = h), (q_scalar, k_scalar, v_scalar))
         q_point, k_point, v_point = map(lambda t: rearrange(t, 'b n (h d c) -> (b h) n d c', h = h, c = 3), (q_point, k_point, v_point))
 
+        rotations = repeat(rotations, 'b n r1 r2 -> (b h) n r1 r2', h = h)
+        translations = repeat(translations, 'b n c -> (b h) n () c', h = h)
+
+        q_point = tf.einsum('b n d c, b n c r -> b n d r', q_point, rotations) + translations
+        k_point = tf.einsum('b n d c, b n c r -> b n d r', k_point, rotations) + translations
+        v_point = tf.einsum('b n d c, b n c r -> b n d r', v_point, rotations) + translations
+
