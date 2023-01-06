@@ -131,3 +131,9 @@ class InvariantPointAttention(tf.keras.layers.Layer):
 
         results = (results_scalar, results_points, results_points_norm)
 
+        if require_pairwise_repr:
+            results_pairwise = rearrange(results_pairwise, 'b h n d -> b n (h d)', h = h)
+            results = (*results, results_pairwise)
+        
+        results = tf.concat(results, axis = -1)
+        return self.to_out(results)   
