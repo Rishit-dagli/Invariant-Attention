@@ -98,3 +98,14 @@ class InvariantPointAttention(tf.keras.layers.Layer):
 
         attn_logits = attn_logits_scalar + attn_logits_points
 
+        if require_pairwise_repr:
+            attn_logits = attn_logits + attn_logits_pairwise
+        
+        if mask is not None:
+            mask = tf.cast(mask, dtype = tf.float32)
+            mask = rearrange(mask, 'b i -> b i ()') * rearrange(mask, 'b j -> b () j')
+            mask = repeat(mask, 'b i j -> (b h) i j', h = h)
+            mask = tf.cast(mask, dtype = tf.bool)
+            mask_value = -tf.experimental.numpy.finfo(attn_logits.dtype).max
+            attn_logits = tf.where(mask, mask_value, attn_logits)
+        
