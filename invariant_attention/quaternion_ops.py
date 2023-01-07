@@ -12,3 +12,12 @@ def quaternion_raw_multiply(a, b):
     oz = aw * bz + ax * by - ay * bx + az * bw
     return tf.stack([ow, ox, oy, oz], axis = -1)
 
+def standardize_quaternion(quaternions):
+    """
+    Convert a unit quaternion to a standard form: one in which the real
+    part is non negative.
+    """
+    condition = quaternions[..., 0:1] < 0
+    x = -quaternions
+    y = quaternions
+    return tf.where(condition, x, y)
