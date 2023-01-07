@@ -21,3 +21,11 @@ def standardize_quaternion(quaternions):
     x = -quaternions
     y = quaternions
     return tf.where(condition, x, y)
+
+def quaternion_multiply(a, b):
+    """
+    Multiply two quaternions representing rotations, returning the quaternion
+    representing their composition, i.e. the versor with nonnegative real part.
+    """
+    ab = quaternion_raw_multiply(a, b)
+    return standardize_quaternion(ab)
