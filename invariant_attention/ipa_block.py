@@ -21,8 +21,7 @@ class FeedForward(tf.keras.layers.Layer):
                 dim_out = dim
             else:
                 dim_out = dim_hidden
-
-            self.layers.append(tf.keras.layers.Dense(dim_out, input_shape=(dim_in,)))
+            self.layers.append(tf.keras.layers.Dense(dim_out))
 
             if is_last:
                 continue
