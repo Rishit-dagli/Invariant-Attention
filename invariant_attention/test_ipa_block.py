@@ -39,11 +39,11 @@ class InvariantPointAttentionTest(tf.test.TestCase):
 
     def test_shape_and_rank_translation_update(self):
         self.assertEqual(tf.rank(self.translation_update), 3)
-        self.assertShapeEqual(np.zeros((1, 256, 3)), translation_update)
+        self.assertShapeEqual(np.zeros((1, 256, 3)), self.translation_update)
 
     def test_shape_and_rank_quaternion_update(self):
         self.assertEqual(tf.rank(self.quaternion_update), 3)
-        self.assertShapeEqual(np.zeros((1, 256, 3)), quaternion_update)
+        self.assertShapeEqual(np.zeros((1, 256, 3)), self.quaternion_update)
 
 
 if __name__ == "__main__":
