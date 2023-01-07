@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 def quaternion_raw_multiply(a, b):
     """
     Multiply two quaternions.
@@ -10,7 +11,8 @@ def quaternion_raw_multiply(a, b):
     ox = aw * bx + ax * bw + ay * bz - az * by
     oy = aw * by - ax * bz + ay * bw + az * bx
     oz = aw * bz + ax * by - ay * bx + az * bw
-    return tf.stack([ow, ox, oy, oz], axis = -1)
+    return tf.stack([ow, ox, oy, oz], axis=-1)
+
 
 def standardize_quaternion(quaternions):
     """
@@ -22,6 +24,7 @@ def standardize_quaternion(quaternions):
     y = quaternions
     return tf.where(condition, x, y)
 
+
 def quaternion_multiply(a, b):
     """
     Multiply two quaternions representing rotations, returning the quaternion
@@ -30,12 +33,13 @@ def quaternion_multiply(a, b):
     ab = quaternion_raw_multiply(a, b)
     return standardize_quaternion(ab)
 
+
 def quaternion_to_matrix(quaternions):
     """
     Convert rotations given as quaternions to rotation matrices.
     """
-    r, i, j, k = tf.unstack(quaternions, axis = -1)
-    two_s = 2.0 / tf.reduce_sum(quaternions * quaternions, axis = -1)
+    r, i, j, k = tf.unstack(quaternions, axis=-1)
+    two_s = 2.0 / tf.reduce_sum(quaternions * quaternions, axis=-1)
 
     o = tf.stack(
         [
