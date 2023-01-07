@@ -5,9 +5,9 @@ from einops import repeat
 from invariant_attention.ipa_block import IPABlock
 
 
-class InvariantPointAttentionTest(tf.test.TestCase):
+class IPABlockTest(tf.test.TestCase):
     def setUp(self):
-        super(InvariantPointAttentionTest, self).setUp()
+        super(IPABlockTest, self).setUp()
 
         self.block = IPABlock(
             dim=64,
