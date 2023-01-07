@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from einops import repeat
 
 from invariant_attention.invariant_attention import InvariantPointAttention
 
