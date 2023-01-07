@@ -1,8 +1,12 @@
-from .invariant_attention import InvariantPointAttention
 import tensorflow as tf
 
+from .invariant_attention import InvariantPointAttention
+
+
 class FeedForward(tf.keras.layers.Layer):
-    def __init__(self, dim, mult = 1., num_layers = 2, activation = tf.keras.layers.ReLU, **kwargs):
+    def __init__(
+        self, dim, mult=1.0, num_layers=2, activation=tf.keras.layers.ReLU, **kwargs
+    ):
         super(FeedForward, self).__init__(**kwargs)
         self.mult = mult
         self.num_layers = num_layers
@@ -12,7 +16,7 @@ class FeedForward(tf.keras.layers.Layer):
         self.layers = []
         for ind in range(num_layers):
             is_first = ind == 0
-            is_last  = ind == (num_layers - 1)
+            is_last = ind == (num_layers - 1)
             if is_first:
                 dim_in = dim
             else:
@@ -28,9 +32,10 @@ class FeedForward(tf.keras.layers.Layer):
 
             self.layers.append(activation())
         self.layers = tf.keras.Sequential(self.layers)
-    
+
     def call(self, inputs):
         return self.layers(inputs)
+
 
 class IPABlock(tf.keras.layers.Layer):
     def __init__(
@@ -39,18 +44,18 @@ class IPABlock(tf.keras.layers.Layer):
         ff_mult=1,
         ff_num_layers=3,
         post_norm=True,
-        post_attn_dropout=0.,
-        post_ff_dropout=0.,
+        post_attn_dropout=0.0,
+        post_ff_dropout=0.0,
         **kwargs
     ):
         super(IPABlock, self).__init__()
         self.post_norm = post_norm
 
-        self.attn_norm = tf.keras.layers.LayerNormalization(axis = -1)
+        self.attn_norm = tf.keras.layers.LayerNormalization(axis=-1)
         self.attn = InvariantPointAttention(dim=dim, **kwargs)
         self.post_attn_dropout = tf.keras.layers.Dropout(post_attn_dropout)
 
-        self.ff_norm = tf.keras.layers.LayerNormalization(axis = -1)
+        self.ff_norm = tf.keras.layers.LayerNormalization(axis=-1)
         self.ff = FeedForward(dim, mult=ff_mult, num_layers=ff_num_layers)
         self.post_ff_dropout = tf.keras.layers.Dropout(post_ff_dropout)
 
